@@ -1,0 +1,1 @@
+iptables -A INPUT -s {{ source }} -p {{ protocol }} --dport {{ port }} -d {{ destination }} -j {{ action }}

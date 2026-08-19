@@ -1,0 +1,4 @@
+set security policy "5.5.5.5 to 10.10.10.10,11.11.11.11,12.12.12.12" from untrust to trust source 5.5.5.5 destination 10.10.10.10,11.11.11.11,12.12.12.12 applciation iROAR protocol tcp port 443 action allow;
+set security policy "10.0.0.0/24 to 10.10.10.10,11.11.11.11,12.12.12.12" from trust to trust source 10.0.0.0/24 destination 10.10.10.10,11.11.11.11,12.12.12.12 applciation iROAR protocol tcp port 443 action allow;
+set security policy "10.0.0.0/24 to 192.168.1.200" from trust to trust source 10.0.0.0/24 destination 192.168.1.200 applciation application-default protocol tcp port 80 action allow;
+set security policy "5.5.5.5 to 10.10.10.10,11.11.11.11,12.12.12.12" from untrust to trust source 5.5.5.5 destination 10.10.10.10,11.11.11.11,12.12.12.12 applciation iROAR protocol tcp port 443 action drop;

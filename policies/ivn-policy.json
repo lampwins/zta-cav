@@ -1,0 +1,123 @@
+{
+  "version": "0.3",
+  "note": "Zero trust policy for the internal vehicle network. Extends the BYOZ policy specification (policy/policy.json) with dynamic context attributes evaluated per continuous context check.",
+  "flows": [
+    {
+      "name": "proximity-to-parking-assist",
+      "source": "proximity_sensor",
+      "destination": "parking_assist_ecu",
+      "event": "SESSION_INIT",
+      "context": {"host_state": "HIP_SAFE", "vehicle_mode": "parked"},
+      "action": "ALLOW",
+      "apply": "IMMEDIATE"
+    },
+    {
+      "name": "abs-to-powertrain",
+      "source": "abs_ecu",
+      "destination": "powertrain_ecu",
+      "event": "SESSION_INIT",
+      "context": {"host_state": "HIP_SAFE", "vehicle_mode": "driving"},
+      "action": "ALLOW",
+      "apply": "IMMEDIATE"
+    },
+    {
+      "name": "srs-to-powertrain",
+      "source": "srs_ecu",
+      "destination": "powertrain_ecu",
+      "event": "SESSION_INIT",
+      "context": {"host_state": "HIP_SAFE", "vehicle_mode": "any"},
+      "action": "ALLOW",
+      "apply": "IMMEDIATE"
+    },
+    {
+      "name": "telematics-to-bcm",
+      "source": "telematics_ecu",
+      "destination": "bcm_ecu",
+      "event": "SESSION_INIT",
+      "context": {"host_state": "HIP_SAFE", "vehicle_mode": "parked"},
+      "action": "ALLOW",
+      "apply": "IMMEDIATE"
+    },
+    {
+      "name": "infotainment-to-engine",
+      "source": "infotainment_ecu",
+      "destination": "engine_ecu",
+      "event": "SESSION_INIT",
+      "context": {"host_state": "any", "vehicle_mode": "any"},
+      "action": "DENY",
+      "apply": "IMMEDIATE"
+    }
+  ],
+  "safety": [
+    {
+      "name": "excessive-speeding",
+      "case_study": "IV-A",
+      "event": "CONTEXT_CHECK",
+      "conditions": [
+        {"attr": "speed_max", "op": ">", "value": 120.0},
+        {"attr": "speed_delta", "op": ">", "value": 20.0},
+        {"attr": "throttle_mean", "op": ">", "value": 45}
+      ],
+      "target": "powertrain_ecu",
+      "action": {"type": "THROTTLE_LIMIT", "value": 0}
+    },
+    {
+      "name": "harsh-acceleration",
+      "case_study": "IV-B",
+      "event": "CONTEXT_CHECK",
+      "conditions": [
+        {"attr": "full_throttle_events", "op": ">=", "value": 4},
+        {"attr": "throttle_max", "op": ">=", "value": 95},
+        {"attr": "speed_delta", "op": ">", "value": 8.0}
+      ],
+      "target": "engine_ecu",
+      "action": {"type": "ACCEL_RATE_LIMIT", "value": 35}
+    },
+    {
+      "name": "abrupt-lane-change",
+      "case_study": "IV-C",
+      "event": "CONTEXT_CHECK",
+      "conditions": [
+        {"attr": "steering_reversals", "op": ">=", "value": 3},
+        {"attr": "steering_max_abs", "op": ">=", "value": 15},
+        {"attr": "signal_active_ratio", "op": "<", "value": 0.1},
+        {"attr": "speed_mean", "op": ">", "value": 60.0}
+      ],
+      "target": "steering_ecu",
+      "action": {"type": "SPEED_LIMIT_AND_ALERT", "value": 55}
+    },
+    {
+      "name": "collision-response",
+      "case_study": "IV-D",
+      "event": "CONTEXT_CHECK",
+      "conditions": [
+        {"attr": "airbag_deployed", "op": "==", "value": true},
+        {"attr": "speed_mean", "op": ">", "value": 5.0},
+        {"attr": "throttle_mean", "op": ">", "value": 10}
+      ],
+      "target": "powertrain_ecu",
+      "action": {"type": "CONTROLLED_BRAKE", "value": 0}
+    },
+    {
+      "name": "door-unlock-then-accelerate",
+      "case_study": "IV-E Fig. 4",
+      "event": "CONTEXT_CHECK",
+      "conditions": [
+        {"attr": "door_unlocked", "op": "==", "value": true},
+        {"attr": "throttle_max", "op": ">", "value": 80},
+        {"attr": "speed_delta", "op": ">", "value": 10.0}
+      ],
+      "target": "bcm_ecu",
+      "action": {"type": "LOCK_DOORS_DROP_ACCEL", "value": 0}
+    }
+  ],
+  "device": {
+    "event": "CONTINUOUS_CONTEXT_CHECK",
+    "conditions": [
+      {"attr": "registered", "op": "==", "value": true},
+      {"attr": "rate_error_pct", "op": "<=", "value": 25.0},
+      {"attr": "skew_error_ppm", "op": "<=", "value": 4000.0}
+    ],
+    "action": {"type": "REVOKE_FLOWS_AND_ISOLATE"}
+  }
+}

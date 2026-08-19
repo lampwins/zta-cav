@@ -1,0 +1,4 @@
+iptables -A INPUT -s 5.5.5.5 -p tcp --dport 443 -d 10.10.10.10,11.11.11.11,12.12.12.12 -j ALLOW
+iptables -A INPUT -s 10.0.0.0/24 -p tcp --dport 443 -d 10.10.10.10,11.11.11.11,12.12.12.12 -j ALLOW
+iptables -A INPUT -s 10.0.0.0/24 -p tcp --dport 80 -d 192.168.1.200 -j ALLOW
+iptables -A INPUT -s 5.5.5.5 -p tcp --dport 443 -d 10.10.10.10,11.11.11.11,12.12.12.12 -j DROP

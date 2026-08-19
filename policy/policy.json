@@ -1,0 +1,77 @@
+[
+    {
+        "source_type": "PUBLIC",
+        "source": "5.5.5.5",
+        "host": "MANAGED",
+        "host_state": "HIP_SAFE",
+        "location_physical": "41.40338, 2.17403",
+        "location_logical": {
+            "type": "wifi",
+            "secure": false,
+            "ssid": "Starbucks"
+        },
+        "destination_type": "APP",
+        "destination": "iROAR",
+        "event": "SESSION_INIT",
+        "action": "ALLOW",
+        "apply": "IMMEDIATE"
+    },
+    {
+        "source_type": "PRIVATE",
+        "source": "10.0.0.0/24",
+        "host": "MANAGED",
+        "host_state": "HIP_SAFE",
+        "location_physical": "41.40338, 2.17403",
+        "location_logical": {
+            "type": "wifi",
+            "secure": true,
+            "ssid": "CORP-SECURE"
+        },
+        "destination_type": "APP",
+        "destination": "iROAR",
+        "event": "SESSION_INIT",
+        "action": "ALLOW",
+        "apply": "IMMEDIATE"
+    },
+    {
+        "source_type": "PRIVATE",
+        "source": "10.0.0.0/24",
+        "host": "MANAGED",
+        "host_state": "HIP_SAFE",
+        "location_physical": "41.40338, 2.17403",
+        "location_logical": {
+            "type": "physical"
+        },
+        "destination_type": "NETWORK",
+        "destination": {
+            "protocol": "tcp",
+            "port": 80,
+            "hosts": [
+                "172.16.0.0/12"
+            ]
+        },
+        "event": "SESSION_INIT",
+        "action": {
+            "type": "REDIRECT",
+            "address": "192.168.1.200"
+        },
+        "apply": "IMMEDIATE"
+    },
+    {
+        "source_type": "PUBLIC",
+        "source": "5.5.5.5",
+        "host": "MANAGED",
+        "host_state": "HIP_SAFE",
+        "location_physical": "41.40338, 2.17403",
+        "location_logical": {
+            "type": "wifi",
+            "secure": false,
+            "ssid": "Starbucks"
+        },
+        "destination_type": "APP",
+        "destination": "iROAR",
+        "event": "SESSION_INIT",
+        "action": "DENY",
+        "apply": "IMMEDIATE"
+    }
+]

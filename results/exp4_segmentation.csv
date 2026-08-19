@@ -1,0 +1,9 @@
+node,trunk,flat_bus_reachable,zta_reachable,zta_reachable_after_isolation,zta_peers
+abs_ecu,trunk_a_powertrain,7,1,0,powertrain_ecu
+bcm_ecu,trunk_b_body,7,0,0,
+engine_ecu,trunk_a_powertrain,7,0,0,
+infotainment_ecu,trunk_c_external,7,0,0,
+powertrain_ecu,trunk_a_powertrain,7,0,0,
+srs_ecu,trunk_b_body,7,1,0,powertrain_ecu
+steering_ecu,trunk_b_body,7,0,0,
+telematics_ecu,trunk_c_external,7,0,0,
